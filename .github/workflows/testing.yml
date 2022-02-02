@@ -18,11 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.8.10'
       - name: "Install dependencies"
-        run: pip install --user cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
+        run: sudo apt install cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
       - name: "Create build folder"
         run: mkdir build && cd build
       - name: "Cmake build"
@@ -40,11 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.8.10'
       - name: "Install dependencies"
-        run: pip install --user cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
+        run: sudo apt install cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
       - name: "Download artifact"
         uses: actions/download-artifact@v2
         with:
