@@ -1,0 +1,55 @@
+name: check-test-coverage workflow
+
+on: [push]
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install style checker"
+        run: pip install --user clang-format
+      - name: "Run style check"
+        run: clang-format -i src/*
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install dependencies"
+        run: pip install --user cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
+      - name: "Create build folder"
+        run: mkdir build && cd build
+      - name: "Cmake build"
+        run: cmake .. && make -j
+      - name: "Prepare for artifact upload"
+        run: tar -cvf build.tar build
+      - name: "Artifact upload"
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build.tar
+          retention-days: 14
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.10'
+      - name: "Install dependencies"
+        run: pip install --user cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
+     - name: "Download artifact"
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+      - name: "Unzip artifact"
+        run: tar -xf build.tar
+      - name: "Run tests" 
+        run: cd build && make test 
