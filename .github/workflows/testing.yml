@@ -36,8 +36,8 @@ jobs:
           path: build.tar
           retention-days: 14
   test:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -45,7 +45,7 @@ jobs:
           python-version: '3.8.10'
       - name: "Install dependencies"
         run: pip install --user cmake libeigen3-dev libyaml-cpp-dev libboost-all-dev
-     - name: "Download artifact"
+      - name: "Download artifact"
         uses: actions/download-artifact@v2
         with:
           name: build
